@@ -1,0 +1,21 @@
+Package: knowboxr
+Title: knowboxr
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Thomas",
+           family = "Jc",
+           role = c("cre", "aut"),
+           email = "thomas.jcng@gmail.com")
+Description: A general purpose package for Knowbox data
+    analytics.
+License: MIT + file LICENSE
+URL: https://github.com/tmasjc/knowboxr.git
+BugReports: https://github.com/tmasjc/dkbi/issues
+Imports: 
+    attempt,
+    curl,
+    httr,
+    jsonlite,
+    purrr
+Encoding: UTF-8
+LazyData: true

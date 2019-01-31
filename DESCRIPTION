@@ -13,9 +13,16 @@ URL: https://github.com/tmasjc/knowboxr.git
 BugReports: https://github.com/tmasjc/dkbi/issues
 Imports: 
     attempt,
+    base64enc,
     curl,
+    DBI,
     httr,
     jsonlite,
-    purrr
+    magrittr,
+    mongolite,
+    purrr,
+    RMariaDB,
+    RPostgreSQL
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1

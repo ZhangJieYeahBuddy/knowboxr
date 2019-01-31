@@ -11,7 +11,9 @@ my_desc <- description$new("!new")
 my_desc$set("Package", "knowboxr")
 
 #Set your name
-my_desc$set("Authors@R", "person('Thomas', 'Jc', email = 'thomas.jcng@gmail.com', role = c('cre', 'aut'))")
+my_desc$set("Authors@R", "person('Thomas', 'Jc',
+            email = 'thomas.jcng@gmail.com',
+            role = c('cre', 'aut'))")
 
 # Remove some author fields
 my_desc$del("Maintainer")
@@ -36,11 +38,17 @@ use_lifecycle_badge("Experimental")
 use_news_md()
 
 # Get the dependencies
+use_package("DBI")
 use_package("httr")
 use_package("jsonlite")
 use_package("curl")
 use_package("attempt")
+use_package("magrittr")
+use_package("base64enc")
 use_package("purrr")
+use_package("mongolite")
+use_package("RMariaDB")
+use_package("RPostgreSQL")
 
 # Clean your description
 use_tidy_description()

@@ -13,17 +13,40 @@ A general purpose package for Knowbox data analytics.
 devtools::install_github("tmasjc/knowboxr")
 ```
 
-## Required Variables
+## Preset `Consul` Environment in `R`
 
-*TODO*
+Replace host and port with true value.
+
+``` r
+# consul environment
+consul <- new.env()
+consul$host <- "some host"
+```
+
+It is recommended to set above variables via `.Renviron`.
+
+``` r
+consul <- new.env()
+consul$host <- Sys.getenv("consul.host")
+consul$port <- Sys.getenv("consul.port")
+consul$swagger <- Sys.getenv("consul.swagger")
+```
 
 ## Common Workflow
 
-*TODO*
+Establish connection to database
 
-## Available Commands
+``` r
+conn <- est_pgres_conn('some database')
+tbl(conn, "some table")
+DBI::dbDisconnect(conn)
+```
 
-*TODO*
+Driver for databases:
+
+1.  `MySQL` - [RMariaDB](https://github.com/r-dbi/RMariaDB)
+2.  `PostgreSQL` - [RPostgreSQL](https://github.com/r-dbi/RPostgres)
+3.  `Mongo` - [mongolite](https://github.com/jeroen/mongolite/)
 
 -----
 

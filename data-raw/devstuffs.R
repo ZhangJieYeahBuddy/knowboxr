@@ -12,7 +12,7 @@ my_desc$set("Package", "knowboxr")
 
 #Set your name
 my_desc$set("Authors@R", "person('Thomas', 'Jc',
-            email = 'thomas.jcng@gmail.com',
+            email = 'tangms@knowbox.cn',
             role = c('cre', 'aut'))")
 
 # Remove some author fields

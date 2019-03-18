@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Thomas",
            family = "Jc",
            role = c("cre", "aut"),
-           email = "thomas.jcng@gmail.com")
+           email = "tangms@knowbox.cn")
 Description: A general purpose package for Knowbox data
     analytics.
 License: MIT + file LICENSE

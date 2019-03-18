@@ -32,9 +32,7 @@ consul$port <- Sys.getenv("consul.port")
 consul$swagger <- Sys.getenv("consul.swagger")
 ```
 
-## Common Workflow
-
-Establish connection to database
+## Establish Connection to Database
 
 ``` r
 conn <- est_pgres_conn('some database')
@@ -42,7 +40,7 @@ tbl(conn, "some table")
 DBI::dbDisconnect(conn)
 ```
 
-Driver for databases:
+Currently supported databases and required drivers:
 
 1.  `MySQL` - [RMariaDB](https://github.com/r-dbi/RMariaDB)
 2.  `PostgreSQL` - [RPostgreSQL](https://github.com/r-dbi/RPostgres)

@@ -46,7 +46,12 @@ Driver for databases:
 
 1.  `MySQL` - [RMariaDB](https://github.com/r-dbi/RMariaDB)
 2.  `PostgreSQL` - [RPostgreSQL](https://github.com/r-dbi/RPostgres)
-3.  `Mongo` - [mongolite](https://github.com/jeroen/mongolite/)
+3.  `Mongo` - [Mongolite](https://github.com/jeroen/mongolite/)
+
+## Dataset
+
+1.  `county_level` - Counties’ information table
+2.  `city_geocode` - Cities’ longitude and latitude table
 
 -----
 

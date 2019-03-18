@@ -237,3 +237,36 @@ est_mongo_conn <- function(db) {
 }
 
 
+# Dataset -----------------------------------------------------------------
+
+#' Living quality index of various counties.
+#'
+#' An in-house dataset containing various counties' information.
+#'
+#' @format A tibble with 3240 rows and 8 variables:
+#' \describe{
+#'  \item{province_id}{省份 ID}
+#'  \item{province_name}{省份}
+#'  \item{city_id}{城市 ID}
+#'  \item{city_name}{城市}
+#'  \item{county_id}{县级 ID}
+#'  \item{county_name}{县级}
+#'  \item{county_level}{县级等级，A 为最好，E 为最差}
+#'  \item{update_date}{最后更新日期}
+#' }
+#' @source Anjuke 安居客 2017
+"county_level"
+
+
+#' Geocodes of various cities.
+#'
+#' A general dataset containing various cities' longitude and latitude information.
+#'
+#' @format A tibble with 334 rows and 3 variables.
+#' \describe{
+#'  \item{city_name}{Name of city}
+#'  \item{lon}{Longitude}
+#'  \item{lat}{Latitude}
+#' }
+#' @source Amap 高德地图 2019
+"city_geocode"

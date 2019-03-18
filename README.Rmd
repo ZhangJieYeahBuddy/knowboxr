@@ -56,6 +56,12 @@ Driver for databases:
 2. `PostgreSQL` - [RPostgreSQL](https://github.com/r-dbi/RPostgres)
 3. `Mongo` - [Mongolite](https://github.com/jeroen/mongolite/)
 
+## Dataset 
+
+1. `county_level` - Counties' information table
+2. `city_geocode` - Cities' longitude and latitude table
+
+
 ____
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.

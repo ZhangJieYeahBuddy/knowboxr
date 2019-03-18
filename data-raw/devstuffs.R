@@ -28,6 +28,8 @@ my_desc$set(Description = "A general purpose package for Knowbox data analytics.
 # The urls
 my_desc$set("URL", "https://github.com/tmasjc/knowboxr.git")
 my_desc$set("BugReports", "https://github.com/tmasjc/dkbi/issues")
+# Use lazy data
+my_desc$set("LazyData", "true")
 # Save everyting
 my_desc$write(file = "DESCRIPTION")
 

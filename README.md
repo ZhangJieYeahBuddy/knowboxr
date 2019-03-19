@@ -35,7 +35,7 @@ consul$swagger <- Sys.getenv("consul.swagger")
 ## Establish Reverse Proxy
 
 ``` r
-# returned as a R6 objecy
+# returned as a R6 object
 p <- reverse_proxy("some tunnel")
 # check status
 p$is_alive()
@@ -44,6 +44,8 @@ p$kill()
 ```
 
 See `?reverse_proxy` for required config.
+
+Note: `reverse_proxy` uses `ProcessX` package underneath.
 
 ## Establish Connection to Database
 

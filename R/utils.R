@@ -275,8 +275,11 @@ est_mongo_conn <- function(db) {
 #' @keywords internal
 cut_dates <- function(start_date, end_date, cut) {
 
+  # coerse to date
+  d <- lapply(c(start_date, end_date), as.Date)
+
   # break down by months, weeks or days
-  cuts <- seq(start_date, end_date, by = cut)
+  cuts <- seq(first(d), last(d), by = cut)
 
   # return cut intervals in pair
   return(list(

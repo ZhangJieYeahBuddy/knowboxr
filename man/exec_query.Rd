@@ -4,7 +4,7 @@
 \alias{exec_query}
 \title{Execute Single Query}
 \usage{
-exec_query(query, timevar, from, to)
+exec_query(query, timevar, from, to, collect)
 }
 \description{
 Execute Single Query

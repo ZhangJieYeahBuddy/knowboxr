@@ -4,7 +4,8 @@
 \alias{col_chunks}
 \title{Collect Data in Chunks}
 \usage{
-col_chunks(query, timevar, min, max, break_by = "weeks")
+col_chunks(query, timevar, min, max, break_by = "weeks",
+  collect = FALSE)
 }
 \arguments{
 \item{query}{SQL query to fetch from database.}
@@ -16,6 +17,8 @@ col_chunks(query, timevar, min, max, break_by = "weeks")
 \item{max}{Maximum or end date.}
 
 \item{break_by}{A character string, containing one of "day", "week", "month", "quarter" or "year".}
+
+\item{collect}{If true, retrieves data into a local tibble.}
 }
 \value{
 Data in chunks in list form.

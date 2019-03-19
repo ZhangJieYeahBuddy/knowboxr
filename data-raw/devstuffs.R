@@ -40,6 +40,7 @@ use_lifecycle_badge("Experimental")
 use_news_md()
 
 # Get the dependencies
+use_package("rlang")
 use_package("DBI")
 use_package("httr")
 use_package("jsonlite")

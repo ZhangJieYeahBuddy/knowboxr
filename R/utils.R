@@ -237,6 +237,66 @@ est_mongo_conn <- function(db) {
 }
 
 
+# Collect Data in Chunks --------------------------------------------------
+
+#' Break Down 2 Dates In Interval
+cut_dates <- function(start_date, end_date, cut) {
+
+  # break down by months, weeks or days
+  cuts <- seq(start_date, end_date, by = cut)
+
+  # return cut intervals in pair
+  return(list(
+    x = cuts[1:(length(cuts) - 1)],
+    y = cuts[2:length(cuts)]
+  ))
+
+}
+
+#' Execute Single Query
+exec_query <- function(query, timevar, from, to) {
+
+  # which time variable to filter from
+  var = rlang::enquo(timevar)
+
+  ## use quo_text to coerse type 'closure' to character
+  message(sprintf("<< -- Ready to collect %s from %s to %s -- >>", quo_text(var), from, to))
+
+  # execute query and collect data
+  query %>%
+    filter(!!var >= from, !!var < to) %>%
+    collect()
+
+}
+
+#' Collect Data in Chunks
+#'
+#' @param query SQL query to fetch from database.
+#' @param timevar Time-dependent variable to be splitted.
+#' @param min Mininum or start date.
+#' @param max Maximum or end date.
+#' @param break_by A character string, containing one of "day", "week", "month", "quarter" or "year".
+#' @return Data in chunks in list form.
+#' @examples
+#' \dontrun{
+#' src <- tbl(conn, "some_table")
+#' src %>% col_chunks(register_time, "2019-01-01", "2019-12-31")
+#' }
+#' @export
+col_chunks <- function(query, timevar, min, max, break_by = "weeks") {
+
+  # bare to quosure
+  var = rlang::enquo(timevar)
+
+  # break down in chunks
+  d <- cut_dates(min, max, break_by)
+
+  # return
+  map2(.x = d$x, .y = d$y, .f = ~ exec_query(query, !!var, .x, .y))
+
+}
+
+
 # Dataset -----------------------------------------------------------------
 
 #' Living quality index of various counties.

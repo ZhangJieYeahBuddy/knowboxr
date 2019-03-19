@@ -36,15 +36,29 @@ consul$swagger <- Sys.getenv("consul.swagger")
 
 ``` r
 conn <- est_pgres_conn('some database')
-tbl(conn, "some table")
-DBI::dbDisconnect(conn)
+o_tbl <- tbl(conn, "some table")
 ```
 
 Currently supported databases and required drivers:
 
-1.  `MySQL` - [RMariaDB](https://github.com/r-dbi/RMariaDB)
-2.  `PostgreSQL` - [RPostgreSQL](https://github.com/r-dbi/RPostgres)
-3.  `Mongo` - [Mongolite](https://github.com/jeroen/mongolite/)
+1.  `MySQL`
+2.  `PostgreSQL`
+3.  `Mongo`
+
+See `ls(name = "package:knowboxr", pattern = "est_*")`
+
+## Collect Data from Database in Chunks
+
+Imagine we have to collect data ranged from year 2018 to year 2019. We
+specify the time-dependent variable and `col_chunks` automatically
+breaks down the data collection by chunks (default is `weeks`).
+
+``` r
+# after establish connection to database from above
+o_tbl %>% 
+  select(var1, var2) %>% 
+  col_chunks(timevar = time, min = "2018-01-01", max = "2019-01-01")
+```
 
 ## Dataset
 

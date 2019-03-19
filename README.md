@@ -45,7 +45,8 @@ Currently supported databases and required drivers:
 2.  `PostgreSQL`
 3.  `Mongo`
 
-See `ls(name = "package:knowboxr", pattern = "est_*")`
+See `ls(name = "package:knowboxr", pattern = "est_*")` and respective
+help page.
 
 ## Collect Data from Database in Chunks
 

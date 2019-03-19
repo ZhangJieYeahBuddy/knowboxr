@@ -121,6 +121,37 @@ get_batch_kv <- function(path, ...) {
 }
 
 
+
+# Reverse Proxy -----------------------------------------------------------
+
+#' Do Reverse Proxy
+#'
+#' Create a reverse proxy as a background process. Concept explained in details see here
+#' https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work.
+#'
+#' @param conn Proxy name (key) to fetch from \code{Consul}.
+#' @return An R6 object generated from \code{Processx}
+#' @export
+reverse_proxy <- function(conn) {
+
+  # required parameters to establish connection
+  params <- c("user", "port", "remotehost", "remoteport", "farawayhost", "farawayport")
+
+  # fetch credentials
+  ssh <- get_batch_kv(conn, params)
+
+  # ssh -L sourcePort:forwardToHost:onPort connectToHost
+  p <- with(ssh, processx::process$new("ssh",
+                                       c(
+                                         "-L", sprintf("%s:%s:%s", port, farawayhost, farawayport),
+                                         "-p", remoteport,
+                                         sprintf("%s@%s", user, remotehost),
+                                         "-NnT"
+                                       )))
+  # return R6 object
+  return(p)
+}
+
 # Establish Connection to Common Database ---------------------------------
 
 #' Establish Connection to Common Databases
@@ -237,6 +268,7 @@ est_mongo_conn <- function(db) {
 }
 
 
+
 # Collect Data in Chunks --------------------------------------------------
 
 #' Break Down 2 Dates In Interval
@@ -256,18 +288,23 @@ cut_dates <- function(start_date, end_date, cut) {
 
 #' Execute Single Query
 #' @keywords internal
-exec_query <- function(query, timevar, from, to) {
+exec_query <- function(query, timevar, from, to, collect) {
 
   # which time variable to filter from
   var = rlang::enquo(timevar)
 
   ## use quo_text to coerse type 'closure' to character
-  message(sprintf("<< -- Ready to collect %s from %s to %s -- >>", quo_text(var), from, to))
+  message(sprintf("<< -- Ready to collect %s from %s to %s -- >>", rlang::quo_text(var), from, to))
 
   # execute query and collect data
-  query %>%
-    filter(!!var >= from, !!var < to) %>%
-    collect()
+  q = query %>% filter(!!var >= from, !!var < to)
+
+  # do not force computation unless it is neccessary
+  if(collect) {
+    collect(q)
+  } else {
+    collapse(q)
+  }
 
 }
 
@@ -278,6 +315,7 @@ exec_query <- function(query, timevar, from, to) {
 #' @param min Mininum or start date.
 #' @param max Maximum or end date.
 #' @param break_by A character string, containing one of "day", "week", "month", "quarter" or "year".
+#' @param collect If true, retrieves data into a local tibble.
 #' @return Data in chunks in list form.
 #' @examples
 #' \dontrun{
@@ -285,7 +323,7 @@ exec_query <- function(query, timevar, from, to) {
 #' src %>% col_chunks(register_time, "2019-01-01", "2019-12-31")
 #' }
 #' @export
-col_chunks <- function(query, timevar, min, max, break_by = "weeks") {
+col_chunks <- function(query, timevar, min, max, break_by = "weeks", collect = FALSE) {
 
   # bare to quosure
   var = rlang::enquo(timevar)
@@ -294,9 +332,10 @@ col_chunks <- function(query, timevar, min, max, break_by = "weeks") {
   d <- cut_dates(min, max, break_by)
 
   # return
-  map2(.x = d$x, .y = d$y, .f = ~ exec_query(query, !!var, .x, .y))
+  map2(.x = d$x, .y = d$y, .f = ~ exec_query(query, !!var, .x, .y, collect = collect))
 
 }
+
 
 
 # Dataset -----------------------------------------------------------------

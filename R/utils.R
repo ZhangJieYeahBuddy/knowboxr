@@ -129,7 +129,19 @@ get_batch_kv <- function(path, ...) {
 #' Create a reverse proxy as a background process. Concept explained in details see here
 #' https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work.
 #'
-#' @param conn Proxy name (key) to fetch from \code{Consul}.
+#' @param conn Pro2xy name (key) to fetch from \code{Consul}.
+#' @description Establish a reverse proxy connection.
+#'
+#' Required keys from Consul:
+#'   \itemize{
+#'   \item user
+#'   \item port
+#'   \item remotehost
+#'   \item remoteport
+#'   \item farawayhost
+#'   \item farawayport
+#'   }
+#'
 #' @return An R6 object generated from \code{Processx}
 #' @export
 reverse_proxy <- function(conn) {
@@ -159,7 +171,7 @@ reverse_proxy <- function(conn) {
 #' @name est_some_conn
 #' @description Fetch credentials from Consul K/V store and establish connection to database.
 #'
-#' Required values for respective database:
+#' Required keys from Consul:
 #'
 #'   \code{MySQL, PostgreSQL}
 #'   \itemize{

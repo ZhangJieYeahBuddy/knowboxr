@@ -39,10 +39,23 @@ consul$port <- Sys.getenv("consul.port")
 consul$swagger <- Sys.getenv("consul.swagger")
 ```
 
+## Establish Reverse Proxy
+
+```{r}
+# returned as a R6 objecy
+p <- reverse_proxy("some tunnel")
+# check status
+p$is_alive()
+# kill process
+p$kill()
+```
+
+See `?reverse_proxy` for required config.
 
 ## Establish Connection to Database
 
 ```{r}
+# assume some postgres database
 conn <- est_pgres_conn('some database')
 o_tbl <- tbl(conn, "some table")
 ```
@@ -53,7 +66,7 @@ Currently supported databases and required drivers:
 2. `PostgreSQL` 
 3. `Mongo`
 
-See `ls(name = "package:knowboxr", pattern = "est_*")` and respective help page.
+For full list see `ls(name = "package:knowboxr", pattern = "est_*")`.
 
 ## Collect Data from Database in Chunks
 

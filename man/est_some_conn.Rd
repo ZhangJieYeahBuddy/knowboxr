@@ -26,7 +26,7 @@ Database connection if successful.
 \description{
 Fetch credentials from Consul K/V store and establish connection to database.
 
-Required values for respective database:
+Required keys from Consul:
 
   \code{MySQL, PostgreSQL}
   \itemize{

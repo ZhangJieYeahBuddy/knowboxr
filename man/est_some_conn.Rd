@@ -9,7 +9,7 @@
 \usage{
 est_some_conn(db, drv)
 
-est_mysql_conn(database, driver = RMariaDB::MariaDB())
+est_mysql_conn(db, drv = RMariaDB::MariaDB())
 
 est_pgres_conn(db, drv = RPostgreSQL::PostgreSQL())
 

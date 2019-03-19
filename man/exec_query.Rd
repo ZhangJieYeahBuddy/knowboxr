@@ -9,3 +9,4 @@ exec_query(query, timevar, from, to)
 \description{
 Execute Single Query
 }
+\keyword{internal}

@@ -9,3 +9,4 @@ cut_dates(start_date, end_date, cut)
 \description{
 Break Down 2 Dates In Interval
 }
+\keyword{internal}

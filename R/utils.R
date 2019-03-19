@@ -194,8 +194,8 @@ est_some_conn <- function(db, drv) {
 #' @importFrom RMariaDB MariaDB
 #' @export
 #' @rdname est_some_conn
-est_mysql_conn <- function(database, driver = RMariaDB::MariaDB()) {
-  est_some_conn(database, driver)
+est_mysql_conn <- function(db, drv = RMariaDB::MariaDB()) {
+  est_some_conn(db, drv)
 }
 
 #' @importFrom RPostgreSQL PostgreSQL
@@ -240,6 +240,7 @@ est_mongo_conn <- function(db) {
 # Collect Data in Chunks --------------------------------------------------
 
 #' Break Down 2 Dates In Interval
+#' @keywords internal
 cut_dates <- function(start_date, end_date, cut) {
 
   # break down by months, weeks or days
@@ -254,6 +255,7 @@ cut_dates <- function(start_date, end_date, cut) {
 }
 
 #' Execute Single Query
+#' @keywords internal
 exec_query <- function(query, timevar, from, to) {
 
   # which time variable to filter from

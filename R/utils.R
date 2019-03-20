@@ -129,7 +129,7 @@ get_batch_kv <- function(path, ...) {
 #' Create a reverse proxy as a background process. Concept explained in details see here
 #' https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work.
 #'
-#' @param conn Pro2xy name (key) to fetch from \code{Consul}.
+#' @param conn Proxy name (key) to fetch from \code{Consul}.
 #' @description Establish a reverse proxy connection.
 #'
 #' Required keys from Consul:
@@ -287,11 +287,8 @@ est_mongo_conn <- function(db) {
 #' @keywords internal
 cut_dates <- function(start_date, end_date, cut) {
 
-  # coerse to date
-  d <- lapply(c(start_date, end_date), as.Date)
-
   # break down by months, weeks or days
-  cuts <- seq(first(d), last(d), by = cut)
+  cuts <- seq(as.Date(start_date), as.Date(end_date), by = cut)
 
   # return cut intervals in pair
   return(list(

@@ -19,7 +19,7 @@ my_desc$set("Authors@R", "person('Thomas', 'Jc',
 my_desc$del("Maintainer")
 
 # Set the version
-my_desc$set_version("0.0.0.9000")
+my_desc$set_version("0.1.0")
 
 # The title of your package
 my_desc$set(Title = "knowboxr")

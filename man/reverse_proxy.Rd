@@ -7,7 +7,7 @@
 reverse_proxy(conn)
 }
 \arguments{
-\item{conn}{Pro2xy name (key) to fetch from \code{Consul}.}
+\item{conn}{Proxy name (key) to fetch from \code{Consul}.}
 }
 \value{
 An R6 object generated from \code{Processx}

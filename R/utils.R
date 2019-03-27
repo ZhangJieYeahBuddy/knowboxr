@@ -11,6 +11,7 @@
 #' @param key Key to register
 #'
 #' @return Logical. TRUE indicates success. FALSE indicated failure.
+#' @importFrom httr PUT
 #' @examples
 #' \dontrun{
 #' register_params("some_mysql_database", get_params("mysql"))
@@ -189,6 +190,7 @@ get_batch_kv <- function(path, ...) {
 #'   }
 #'
 #' @return An R6 object generated from \code{Processx}
+#' @importFrom processx process
 #' @export
 reverse_proxy <- function(conn) {
 
@@ -345,6 +347,9 @@ cut_dates <- function(start_date, end_date, cut) {
 }
 
 #' Execute Single Query
+#' @importFrom magrittr %>%
+#' @importFrom rlang enquo quo_text
+#' @importFrom dplyr filter collapse
 #' @keywords internal
 exec_query <- function(query, timevar, from, to, collect) {
 
@@ -375,6 +380,11 @@ exec_query <- function(query, timevar, from, to, collect) {
 #' @param break_by A character string, containing one of "day", "week", "month", "quarter" or "year".
 #' @param collect If true, retrieves data into a local tibble.
 #' @return Data in chunks in list form.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map2
+#' @importFrom rlang enquo
+#'
 #' @examples
 #' \dontrun{
 #' src <- tbl(conn, "some_table")

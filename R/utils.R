@@ -1,3 +1,52 @@
+# Write to Consul ---------------------------------------------------------
+
+#' Register parameters on Consul
+#'
+#' @description
+#' Register keys with dummy values into Consul KV store.
+#'
+#' See https://www.consul.io/ for more about Consul.
+#'
+#' @param folder Prefix name to register
+#' @param key Key to register
+#'
+#' @return Logical. TRUE indicates success. FALSE indicated failure.
+#' @examples
+#' \dontrun{
+#' register_params("some_mysql_database", get_params("mysql"))
+#' }
+#' @export
+register_params <- function(folder, key) {
+
+  # required parameters
+  params <- c("host", "port", "swagger")
+
+  # defensive
+  if (!all(params %in% ls(envir = consul))) {
+    stop("One or more Consul parameters cannot be found.")
+  }
+
+  # find Consul
+  url <- with(consul, sprintf("http://%s:%s/%s", host, port, swagger))
+
+  # where and what to put
+  postfix <- paste(folder, key, sep = "/")
+  url <- paste0(url, postfix)
+
+  # do not proceed if key exists
+  if (!is.na(get_kv(postfix))) {
+    message("Did not proceed. Key exists.")
+    return(FALSE)
+  }
+
+  # put key into consul
+  res <- PUT(url, body = key)
+
+  # report status
+  ifelse(res$status_code == 200, TRUE, FALSE)
+}
+
+
 # Read from Consul --------------------------------------------------------
 
 #' Obtain Key / Value from Consul
@@ -83,9 +132,6 @@ get_batch_kv <- function(path, ...) {
   if (!length(res) > 0) {
     return(NULL)
   }
-
-  # first on list is folder/, not useful
-  res[[1]] <- NULL
 
   # from Consul
   consul.k <- sapply(res, function(x) x[["Key"]])

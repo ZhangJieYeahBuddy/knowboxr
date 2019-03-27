@@ -26,26 +26,7 @@ Database connection if successful.
 \description{
 Fetch credentials from Consul K/V store and establish connection to database.
 
-Required keys from Consul:
-
-  \code{MySQL, PostgreSQL}
-  \itemize{
-  \item username
-  \item password
-  \item host
-  \item port
-  \item database
-  }
-
-  \code{MongoDB}
-  \itemize{
-  \item username
-  \item password
-  \item host
-  \item port
-  \item database
-  \item \strong{collection}
-  }
+Required keys from Consul see \code{?get_params}
 }
 \examples{
 \dontrun{

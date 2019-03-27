@@ -1,3 +1,28 @@
+# Parameters for Functions ------------------------------------------------
+
+#' Required Parameters for Various Functions
+#'
+#' @description
+#' Parameters needed for functions to establish connections.
+#' @param type Which kind of connection? Pick one of the following:
+#' \itemize{
+#' \item reverse_proxy
+#' \item \code{mysql}
+#' \item \code{pgres}
+#' \item \code{mongo}
+#' }
+#' @return
+#' Parameters for type requested. NULL if type not found.
+#' @export
+get_params <- function(type) {
+  # if type not found
+  if (!type %in% names(params_list)) {
+    return(NULL)
+  }
+  # else
+  params_list[[as.character(type)]]
+}
+
 # Write to Consul ---------------------------------------------------------
 
 #' Register key
@@ -34,6 +59,7 @@ register_key <- function(url, postfix) {
 #' @importFrom purrr map2
 #' @examples
 #' \dontrun{
+#' register_params("some_api", "endpoint")
 #' register_params("some_mysql_database", get_params("mysql"))
 #' }
 #' @export
@@ -55,8 +81,10 @@ register_params <- function(folder, key) {
   url <- paste0(url, postfix)
 
   # do register
-  map2(.x = url, .y = postfix, register_key)
+  res <- map2(.x = url, .y = postfix, register_key)
+  names(res) <- postfix
 
+  return(res)
 }
 
 
@@ -231,26 +259,7 @@ reverse_proxy <- function(conn) {
 #' @name est_some_conn
 #' @description Fetch credentials from Consul K/V store and establish connection to database.
 #'
-#' Required keys from Consul:
-#'
-#'   \code{MySQL, PostgreSQL}
-#'   \itemize{
-#'   \item username
-#'   \item password
-#'   \item host
-#'   \item port
-#'   \item database
-#'   }
-#'
-#'   \code{MongoDB}
-#'   \itemize{
-#'   \item username
-#'   \item password
-#'   \item host
-#'   \item port
-#'   \item database
-#'   \item \strong{collection}
-#'   }
+#' Required keys from Consul see \code{?get_params}
 #'
 #' @param db Database to connect to
 #' @param drv Database driver

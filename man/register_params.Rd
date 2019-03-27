@@ -21,6 +21,7 @@ See https://www.consul.io/ for more about Consul.
 }
 \examples{
 \dontrun{
+register_params("some_api", "endpoint")
 register_params("some_mysql_database", get_params("mysql"))
 }
 }

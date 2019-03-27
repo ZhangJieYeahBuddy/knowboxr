@@ -1,5 +1,25 @@
 # Write to Consul ---------------------------------------------------------
 
+#' Register key
+#'
+#' @importFrom httr PUT
+#' @keywords internal
+register_key <- function(url, postfix) {
+
+  # do not proceed if key exists
+  if (!is.na(get_kv(postfix))) {
+    message(sprintf("Did not proceed to register %s. Key exists.", postfix))
+    return(FALSE)
+  }
+
+  # put key into consul with default value
+  res <- httr::PUT(url, body = "{default}")
+
+  # report status
+  ifelse(res$status_code == 200, TRUE, FALSE)
+
+}
+
 #' Register parameters on Consul
 #'
 #' @description
@@ -11,7 +31,7 @@
 #' @param key Key to register
 #'
 #' @return Logical. TRUE indicates success. FALSE indicated failure.
-#' @importFrom httr PUT
+#' @importFrom purrr map2
 #' @examples
 #' \dontrun{
 #' register_params("some_mysql_database", get_params("mysql"))
@@ -34,17 +54,9 @@ register_params <- function(folder, key) {
   postfix <- paste(folder, key, sep = "/")
   url <- paste0(url, postfix)
 
-  # do not proceed if key exists
-  if (!is.na(get_kv(postfix))) {
-    message("Did not proceed. Key exists.")
-    return(FALSE)
-  }
+  # do register
+  map2(.x = url, .y = postfix, register_key)
 
-  # put key into consul
-  res <- PUT(url, body = key)
-
-  # report status
-  ifelse(res$status_code == 200, TRUE, FALSE)
 }
 
 

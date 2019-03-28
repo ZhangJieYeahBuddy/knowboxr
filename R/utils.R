@@ -437,7 +437,7 @@ col_chunks <- function(query, timevar, min, max, break_by = "weeks", collect = F
 #' @param sheet API to fetch from Sheetlabs
 #' @param source Key to fetch from \code{Consul} to obtain credentials. Default is 'Sheetlabs'.
 #' @return A data frame if successful. A list of error message and code if failure
-#' @importFrom httr GET authenticate
+#' @importFrom httr GET authenticate content
 #' @importFrom jsonlite fromJSON
 #' @export
 download_sheet <- function(sheet, source = "sheetlabs") {
@@ -452,8 +452,14 @@ download_sheet <- function(sheet, source = "sheetlabs") {
   message(sprintf("Ready to download data from %s", url))
   res <- httr::GET(url, httr::authenticate(auth$username, auth$password))
 
+  # defensive
+  if (res$status_code != 200) {
+    return(list(errormsg = "Failed to download",
+                errorcode = res$status_code))
+  }
+
   # extract content to data frame
-  jsonlite::fromJSON(content(res, as = "text"))
+  jsonlite::fromJSON(httr::content(res, as = "text"))
 
 }
 

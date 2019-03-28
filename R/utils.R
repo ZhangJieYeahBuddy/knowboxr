@@ -6,6 +6,7 @@
 #' Parameters needed for functions to establish connections.
 #' @param type Which kind of connection? Pick one of the following:
 #' \itemize{
+#' \item login (username and password)
 #' \item reverse_proxy
 #' \item \code{mysql}
 #' \item \code{pgres}
@@ -25,7 +26,7 @@ get_params <- function(type) {
 
 # Write to Consul ---------------------------------------------------------
 
-#' Register key
+#' Register Key
 #'
 #' @importFrom httr PUT
 #' @keywords internal
@@ -45,7 +46,7 @@ register_key <- function(url, postfix) {
 
 }
 
-#' Register parameters on Consul
+#' Register Parameters on Consul
 #'
 #' @description
 #' Register keys with dummy values into Consul KV store.
@@ -91,6 +92,7 @@ register_params <- function(folder, key) {
 # Read from Consul --------------------------------------------------------
 
 #' Obtain Key / Value from Consul
+#'
 #' @description See https://www.consul.io/ for more about Consul.
 #'
 #' @param key Key name to retrieve
@@ -427,9 +429,40 @@ col_chunks <- function(query, timevar, min, max, break_by = "weeks", collect = F
 
 
 
+# Collect Data from Source ---------------------------------------------
+
+
+#' Fetch Sheet from Source
+#'
+#' Fetch sheet from online API. Currently only supports Sheetlabs.
+#' For more info visit https://sheetlabs.com/
+#'
+#' @param sheet API to fetch from Sheetlabs
+#' @param source Key to fetch from \code{Consul} to obtain credentials. Default is 'Sheetlabs'.
+#' @return A data frame if successful. A list of error message and code if failure
+#' @importFrom httr GET authenticate
+#' @importFrom jsonlite fromJSON
+#' @export
+download_sheet <- function(sheet, source = "sheetlabs") {
+
+  # destination
+  url = paste0("https://sheetlabs.com/", sheet)
+
+  # get username and token from Consul
+  auth <- get_batch_kv(source, get_params(source))
+
+  # fetch data
+  message(sprintf("Ready to download data from %s", url))
+  res <- httr::GET(url, httr::authenticate(auth$username, auth$password))
+
+  # extract content to data frame
+  jsonlite::fromJSON(content(res, as = "text"))
+
+}
+
 # Dataset -----------------------------------------------------------------
 
-#' Living quality index of various counties.
+#' Living Quality Index of Various Counties.
 #'
 #' An in-house dataset containing various counties' information.
 #'
@@ -448,7 +481,7 @@ col_chunks <- function(query, timevar, min, max, break_by = "weeks", collect = F
 "county_level"
 
 
-#' Geocodes of various cities.
+#' Geocodes of Various Cities.
 #'
 #' A general dataset containing various cities' longitude and latitude information.
 #'

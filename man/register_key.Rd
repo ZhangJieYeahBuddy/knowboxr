@@ -2,11 +2,11 @@
 % Please edit documentation in R/utils.R
 \name{register_key}
 \alias{register_key}
-\title{Register key}
+\title{Register Key}
 \usage{
 register_key(url, postfix)
 }
 \description{
-Register key
+Register Key
 }
 \keyword{internal}

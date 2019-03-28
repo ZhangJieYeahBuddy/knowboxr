@@ -3,7 +3,7 @@
 \docType{data}
 \name{city_geocode}
 \alias{city_geocode}
-\title{Geocodes of various cities.}
+\title{Geocodes of Various Cities.}
 \format{A tibble with 334 rows and 3 variables.
 \describe{
  \item{city_name}{Name of city}

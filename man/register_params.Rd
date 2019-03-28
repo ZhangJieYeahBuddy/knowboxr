@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{register_params}
 \alias{register_params}
-\title{Register parameters on Consul}
+\title{Register Parameters on Consul}
 \usage{
-register_params(folder, key)
+register_params(id, key)
 }
 \arguments{
-\item{folder}{Prefix name to register}
+\item{id}{Consul identifier}
 
 \item{key}{Key to register}
 }
@@ -22,6 +22,8 @@ See https://www.consul.io/ for more about Consul.
 \examples{
 \dontrun{
 register_params("some_api", "endpoint")
-register_params("some_mysql_database", get_params("mysql"))
+
+# See ?get_params
+register_params("some_mysql_database", get_params(est_mysql_conn))
 }
 }

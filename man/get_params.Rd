@@ -2,22 +2,25 @@
 % Please edit documentation in R/utils.R
 \name{get_params}
 \alias{get_params}
-\title{Required Parameters for Various Functions}
+\title{Required Consul Parameters (Keys) for Various Functions}
 \usage{
-get_params(type)
+get_params(func)
 }
 \arguments{
-\item{type}{Which kind of connection? Pick one of the following:
-\itemize{
-\item reverse_proxy
-\item \code{mysql}
-\item \code{pgres}
-\item \code{mongo}
-}}
+\item{func}{Function to make connection (e.g \code{est_mysql_conn})}
 }
 \value{
-Parameters for type requested. NULL if type not found.
+Vector. Parameters for function requested.
+NULL if function does not require to retrieve key from Consul.
 }
 \description{
-Parameters needed for functions to establish connections.
+Parameters or keys needed for functions to establish connections.
+}
+\examples{
+\dontrun{
+
+# see some examples
+ls(name = "package:knowboxr", pattern = "est")
+get_params(est_mongo_conn)
+}
 }

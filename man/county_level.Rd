@@ -3,7 +3,7 @@
 \docType{data}
 \name{county_level}
 \alias{county_level}
-\title{Living quality index of various counties.}
+\title{Living Quality Index of Various Counties.}
 \format{A tibble with 3240 rows and 8 variables:
 \describe{
  \item{province_id}{省份 ID}

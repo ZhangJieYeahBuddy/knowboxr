@@ -14,16 +14,6 @@ An R6 object generated from \code{Processx}
 }
 \description{
 Establish a reverse proxy connection.
-
-Required keys from Consul:
-  \itemize{
-  \item user
-  \item port
-  \item remotehost
-  \item remoteport
-  \item farawayhost
-  \item farawayport
-  }
 }
 \details{
 Create a reverse proxy as a background process. Concept explained in details see here

@@ -7,7 +7,7 @@
 \alias{est_mongo_conn}
 \title{Establish Connection to Common Databases}
 \usage{
-est_some_conn(db, drv)
+est_some_conn(db, drv, params)
 
 est_mysql_conn(db, drv = RMariaDB::MariaDB())
 
@@ -19,6 +19,8 @@ est_mongo_conn(db)
 \item{db}{Database to connect to}
 
 \item{drv}{Database driver}
+
+\item{params}{See \code{?get_params}}
 }
 \value{
 Database connection if successful.
@@ -26,7 +28,8 @@ Database connection if successful.
 \description{
 Fetch credentials from Consul K/V store and establish connection to database.
 
-Required keys from Consul see \code{?get_params}
+In order for this function to work, one will first need to register parameters in Consul.
+See \code{?register_params}
 }
 \examples{
 \dontrun{

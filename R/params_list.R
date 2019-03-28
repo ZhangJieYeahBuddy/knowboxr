@@ -1,11 +1,12 @@
-###############################################
-########### Parameter Reference ###############
-###############################################
+# -------------------------------------------------------------------------
+# Consul Parameters (Keys) Lookup Table for Functions in Package
+# -------------------------------------------------------------------------
 
-params_list <- list(
+#' @keywords internal
+func_list <- list(
 
-  # mysql database
-  mysql = c(
+  # conn to MySQL database
+  est_mysql_conn = c(
     "username",
     "password",
     "host",
@@ -13,8 +14,8 @@ params_list <- list(
     "database"
   ),
 
-  # postgres database
-  pgres = c(
+  # conn to Postgres database
+  est_pgres_conn = c(
     "username",
     "password",
     "host",
@@ -22,8 +23,8 @@ params_list <- list(
     "database"
   ),
 
-  # mongo database
-  mongo = c(
+  # conn to Mongo database
+  est_mongo_conn = c(
     "username",
     "password",
     "host",
@@ -40,5 +41,11 @@ params_list <- list(
     "remoteport",
     "farawayhost",
     "farawayport"
+  ),
+
+  # download sheet from source
+  download_sheet = c(
+    "username",
+    "password"
   )
 )

@@ -5,15 +5,34 @@
 
 # knowboxr
 
-A general purpose package for Knowbox data analytics.
+A general purpose package for Knowbox data analytics. It mainly helps to
+fetch credentials from `Consul` key-value store and establish database
+connection. You must have `Consul` with host, port, and swagger
+specified in your `R` global environment.
 
 ## Installation
+
+For stable release,
 
 ``` r
 devtools::install_github("tmasjc/knowboxr")
 ```
 
-## Preset `Consul` Environment in `R`
+For development version,
+
+``` r
+devtools::install_github("tmasjc/knowboxr", ref = "development")
+```
+
+To build from source,
+
+``` bash
+# On Terminal, not R
+wget -O knowboxr.tar.gz https://github.com/tmasjc/knowboxr/archive/v0.1.X.tar.gz
+R CMD INSTALL knowboxr.tar.gz
+```
+
+## Declare Consul Environment in `R`
 
 Replace host and port with true value.
 
@@ -23,7 +42,7 @@ consul <- new.env()
 consul$host <- "some host"
 ```
 
-It is recommended to set above variables via `.Renviron`.
+It is recommended to preset above variables via `.Renviron`.
 
 ``` r
 consul <- new.env()
@@ -32,27 +51,43 @@ consul$port <- Sys.getenv("consul.port")
 consul$swagger <- Sys.getenv("consul.swagger")
 ```
 
+## Retrieve Parameters From Consul
+
+For all functions that require to retrieve key-value from Consul, use
+`get_params()` to obtain required parameters.
+
+For an instance,
+
+``` r
+knowboxr::get_params(est_mysql_conn)
+```
+
+    ## [1] "username" "password" "host"     "port"     "database"
+
 ## Establish Reverse Proxy
 
 ``` r
-# returned as a R6 object
-p <- reverse_proxy("some tunnel")
+# do one time only
+register_params(id = "some_tunnel", key = get_params(reverse_proxy))
+# return a R6 object
+p <- reverse_proxy("some_tunnel")
 # check status
 p$is_alive()
 # kill process
 p$kill()
 ```
 
-See `?reverse_proxy` for required config.
-
 Note: `reverse_proxy` uses `ProcessX` package underneath.
 
 ## Establish Connection to Database
 
 ``` r
+# do one-time only
 # assume some postgres database
-conn <- est_pgres_conn('some database')
-o_tbl <- tbl(conn, "some table")
+register_params(id = "some_postgres_database", key = get_params(est_pgres_conn))
+# we can now establish connection by calling registered id
+conn <- est_pgres_conn("some_postgres_database")
+o_tbl <- tbl(conn, "some_table")
 ```
 
 Currently supported databases and required drivers:
@@ -74,6 +109,14 @@ breaks down the data collection by chunks (default is `weeks`).
 o_tbl %>% 
   select(var1, var2) %>% 
   col_chunks(timevar = time, min = "2018-01-01", max = "2019-01-01")
+```
+
+## Download Spreadsheet From Online API
+
+Currently supports: [Sheetlabs](%22https://sheetlabs.com/%22)
+
+``` r
+download_sheet("ORG/ABC")
 ```
 
 ## Dataset

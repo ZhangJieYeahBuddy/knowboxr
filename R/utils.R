@@ -90,10 +90,10 @@ register_params <- function(id, key) {
 
   # where and what to put
   postfix <- paste(id, key, sep = "/")
-  url <- paste0(url, postfix)
+  url <- paste(url, postfix, sep = "/")
 
   # do register
-  res <- map2(.x = url, .y = postfix, register_key)
+  res <- purrr::map2(.x = url, .y = postfix, register_key)
   names(res) <- postfix
 
   return(res)

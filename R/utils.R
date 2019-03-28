@@ -7,7 +7,7 @@
 #' @param func Function to make connection (e.g \code{est_mysql_conn})
 #'
 #' @return
-#' Parameters for function requested.
+#' Vector. Parameters for function requested.
 #' NULL if function does not require to retrieve key from Consul.
 #'
 #' @export
@@ -24,17 +24,13 @@ get_params <- function(func) {
   # quoting unevaluated expression
   ind <- as.character(substitute(func))
 
-  if (!ind %in% ls(name = "package:knowboxr")) {
-    stop(sprintf("Function %s not found in current package.", ind))
-  }
-
   # if not found in list
   if (!ind %in% names(func_list)) {
     return(NULL)
   }
 
   # return parameters
-  func_list[ind]
+  func_list[[ind]]
 }
 
 # Write to Consul ---------------------------------------------------------
@@ -74,7 +70,9 @@ register_key <- function(url, postfix) {
 #' @examples
 #' \dontrun{
 #' register_params("some_api", "endpoint")
-#' register_params("some_mysql_database", get_params("mysql"))
+#'
+#' # See ?get_params
+#' register_params("some_mysql_database", get_params(est_mysql_conn))
 #' }
 #' @export
 register_params <- function(id, key) {
@@ -182,7 +180,7 @@ get_batch_kv <- function(path, ...) {
   url <- sprintf("http://%s:%s/%s/%s?recurse", consul$host, consul$port, consul$swagger, path)
 
   # send GET request
-  res <- GET(url) %>% content()
+  res <- httr::GET(url) %>% httr::content()
 
   # if return empty
   if (!length(res) > 0) {
@@ -232,16 +230,15 @@ get_batch_kv <- function(path, ...) {
 #' https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work.
 #'
 #' @param conn Proxy name (key) to fetch from \code{Consul}.
-#' @param params Consul parameter type. Default is \code{reverse_proxy}. See \code{?get_params}.
 #' @description Establish a reverse proxy connection.
 #'
 #' @return An R6 object generated from \code{Processx}
 #' @importFrom processx process
 #' @export
-reverse_proxy <- function(conn, params = "reverse_proxy") {
+reverse_proxy <- function(conn) {
 
   # fetch credentials
-  ssh <- get_batch_kv(conn, get_params(params))
+  ssh <- get_batch_kv(conn, get_params(reverse_proxy))
 
   # ssh -L sourcePort:forwardToHost:onPort connectToHost
   p <- with(ssh, processx::process$new("ssh",
@@ -262,11 +259,12 @@ reverse_proxy <- function(conn, params = "reverse_proxy") {
 #' @name est_some_conn
 #' @description Fetch credentials from Consul K/V store and establish connection to database.
 #'
-#' Required keys from Consul see \code{?get_params}
+#' In order for this function to work, one will first need to register parameters in Consul.
+#' See \code{?register_params}
 #'
 #' @param db Database to connect to
 #' @param drv Database driver
-#' @param params Consul parameter type. See \code{?get_params}.
+#' @param params See \code{?get_params}
 #'
 #' @return
 #' Database connection if successful.
@@ -282,12 +280,15 @@ reverse_proxy <- function(conn, params = "reverse_proxy") {
 est_some_conn <- function(db, drv, params) {
 
   # fetch credentials
-  db_config <- get_batch_kv(db, get_params(params))
+  db_config <- get_batch_kv(db, params)
 
   # check if all required params are specified
   if(!all(params %in% names(db_config))){
     stop("One or more MySQL parameters is missing")
   }
+
+  #
+  message("")
 
   # est conn
   c <- DBI::dbConnect(
@@ -308,27 +309,27 @@ est_some_conn <- function(db, drv, params) {
 #' @export
 #' @rdname est_some_conn
 est_mysql_conn <- function(db, drv = RMariaDB::MariaDB()) {
-  est_some_conn(db, drv, params = "mysql")
+  est_some_conn(db, drv, params = get_params(est_mysql_conn))
 }
 
 #' @importFrom RPostgreSQL PostgreSQL
 #' @export
 #' @rdname est_some_conn
 est_pgres_conn <- function(db, drv = RPostgreSQL::PostgreSQL()) {
-  est_some_conn(db, drv, params = "pgres")
+  est_some_conn(db, drv, params = get_params(est_pgres_conn))
 }
 
 
 #' @importFrom mongolite mongo
 #' @export
 #' @rdname est_some_conn
-est_mongo_conn <- function(db, params = "mongo") {
+est_mongo_conn <- function(db) {
 
   # fetch mongo credentials
-  mg_config <- get_batch_kv(db, get_params(params))
+  mg_config <- get_batch_kv(db, get_params(est_mongo_conn))
 
   # check if the credentials are specified
-  if(!all(params %in% names(mg_config))){
+  if(!all(get_params(est_mongo_conn) %in% names(mg_config))){
     stop("One or more Mongo parameters is missing")
   }
 
@@ -435,18 +436,17 @@ col_chunks <- function(query, timevar, min, max, break_by = "weeks", collect = F
 #'
 #' @param sheet API to fetch from Sheetlabs
 #' @param source Key to fetch from \code{Consul} to obtain credentials. Default is 'Sheetlabs'.
-#' @param params Consul parameter type. Default is \code{login}. See \code{?get_params}.
 #' @return A data frame if successful. A list of error message and code if failure
 #' @importFrom httr GET authenticate
 #' @importFrom jsonlite fromJSON
 #' @export
-download_sheet <- function(sheet, source = "sheetlabs", params = "login") {
+download_sheet <- function(sheet, source = "sheetlabs") {
 
   # destination
   url = paste0("https://sheetlabs.com/", sheet)
 
   # get username and token from Consul
-  auth <- get_batch_kv(source, get_params(params))
+  auth <- get_batch_kv(source, get_params(download_sheet))
 
   # fetch data
   message(sprintf("Ready to download data from %s", url))

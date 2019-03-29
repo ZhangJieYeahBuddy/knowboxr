@@ -1,14 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
 # knowboxr
 
 A general purpose package for Knowbox data analytics. It mainly helps to
-fetch credentials from `Consul` key-value store and establish database
-connection. You must have `Consul` with host, port, and swagger
+fetch credentials from online key-value store and establish database
+connection. You must have `consul` with host, port, and swagger
 specified in your `R` global environment.
+
+这是作业盒子数据分析团队的 R 功能包，主要用来连接线上的 key-value 存储以及数据库。同时，也支持从 R 环境里启动 `SSH`
+反向代理以及下载云端列表。你必须在 R 的全局环境里创建命名 `consul` 的对象，带有连接地址、端口、后缀。
 
 ## Installation
 
@@ -51,14 +54,20 @@ consul$port <- Sys.getenv("consul.port")
 consul$swagger <- Sys.getenv("consul.swagger")
 ```
 
-## Retrieve Parameters From Consul
+## Required Parameters From Consul
 
 For all functions that require to retrieve key-value from Consul, use
-`get_params()` to obtain required parameters.
-
-For an instance,
+`get_params()` to obtain information.
 
 ``` r
+# to download sheet from online API
+knowboxr::get_params(download_sheet)
+```
+
+    ## [1] "username" "password"
+
+``` r
+# to connect to MySQL database
 knowboxr::get_params(est_mysql_conn)
 ```
 
@@ -69,6 +78,7 @@ knowboxr::get_params(est_mysql_conn)
 ``` r
 # do one time only
 register_params(id = "some_tunnel", key = get_params(reverse_proxy))
+
 # return a R6 object
 p <- reverse_proxy("some_tunnel")
 # check status
@@ -85,6 +95,7 @@ Note: `reverse_proxy` uses `ProcessX` package underneath.
 # do one-time only
 # assume some postgres database
 register_params(id = "some_postgres_database", key = get_params(est_pgres_conn))
+
 # we can now establish connection by calling registered id
 conn <- est_pgres_conn("some_postgres_database")
 o_tbl <- tbl(conn, "some_table")

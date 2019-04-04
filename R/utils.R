@@ -377,7 +377,7 @@ exec_query <- function(query, timevar, from, to, collect) {
   var = rlang::enquo(timevar)
 
   ## use quo_text to coerse type 'closure' to character
-  message(sprintf("<< -- Ready to collect %s from %s to %s -- >>", rlang::quo_text(var), from, to))
+  message(sprintf("<< -- Ready to collect data from {%s} %s to %s -- >>", rlang::quo_text(var), from, to))
 
   # execute query and collect data
   q = query %>% filter(!!var >= from, !!var < to)
@@ -413,8 +413,14 @@ exec_query <- function(query, timevar, from, to, collect) {
 #' @export
 col_chunks <- function(query, timevar, min, max, break_by = "weeks", collect = FALSE) {
 
-  # bare to quosure
+  # must first capture before proceed to check
+  # see https://stackoverflow.com/questions/46309408/using-dplyr-enquo-after-calling-argument
   var = rlang::enquo(timevar)
+
+  # capture string if not a closure
+  if (typeof(timevar) == "character") {
+    var = rlang::sym(timevar)
+  }
 
   # break down in chunks
   d <- cut_dates(min, max, break_by)

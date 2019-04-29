@@ -358,11 +358,14 @@ cut_dates <- function(start_date, end_date, cut) {
   # break down by months, weeks or days
   cuts <- seq(as.Date(start_date), as.Date(end_date), by = cut)
 
-  # return cut intervals in pair
-  return(list(
-    x = cuts[1:(length(cuts) - 1)],
-    y = cuts[2:length(cuts)]
-  ))
+  # cut intervals in pair
+  if (last(cuts) != end_date) {
+    list (x = cuts[1:length(cuts)],
+          y = c(cuts[2:length(cuts)], end_date))
+  } else {
+    list (x = cuts[1:length(cuts) - 1],
+          y = cuts[2:length(cuts)])
+  }
 
 }
 
